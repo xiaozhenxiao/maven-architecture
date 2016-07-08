@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hanyun.platform.member.api.dao.BrandInfoDao" >
+  <resultMap id="BaseResultMap" type="com.hanyun.platform.member.api.domain.BrandInfo" >
+    <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="brand_id" property="brandId" jdbcType="VARCHAR"/>
+        <result column="brand_name" property="brandName" jdbcType="VARCHAR"/>
+        <result column="brand_type_id" property="brandTypeId" jdbcType="VARCHAR"/>
+        <result column="brand_type" property="brandType" jdbcType="VARCHAR"/>
+        <result column="company_name" property="companyName" jdbcType="VARCHAR"/>
+        <result column="bank_id" property="bankId" jdbcType="VARCHAR"/>
+        <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
+        <result column="bank_account" property="bankAccount" jdbcType="VARCHAR"/>
+        <result column="deposit_bank" property="depositBank" jdbcType="VARCHAR"/>
+        <result column="brand_status" property="brandStatus" jdbcType="VARCHAR"/>
+        <result column="province_id" property="provinceId" jdbcType="BIGINT"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city_id" property="cityId" jdbcType="BIGINT"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="industry_id" property="industryId" jdbcType="VARCHAR"/>
+        <result column="industry_name" property="industryName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+        id, brand_id, brand_name, brand_type_id, brand_type, company_name, bank_id, bank_name, bank_account, deposit_bank,brand_status,province_id,
+        province,city_id,city,industry_id, industry_name,create_time, update_time
+    </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.hanyun.platform.member.api.domain.BrandInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from brand_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByBrandId" resultMap="BaseResultMap" parameterType="String" >
+    select 
+    <include refid="Base_Column_List" />
+    from brand_info
+    where brand_id = #{brandId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from brand_info
+    where brand_type = #{brandType,jdbcType=VARCHAR}
+    order by ${columnName} ${orderType}
+    limit #{offset, jdbcType=INTEGER}, #{pageSize, jdbcType=INTEGER}
+  </select>
+  <select id="selectCount" resultType="Long" parameterType="String" >
+    select count(brand_id)
+    from brand_info
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.hanyun.platform.member.api.domain.BrandInfo" >
+    delete from brand_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.hanyun.platform.member.api.domain.BrandInfo" useGeneratedKeys="true" keyProperty="id" >
+    INSERT INTO brand_info (brand_id, brand_name, brand_type_id, brand_type, company_name, bank_id, bank_name, bank_account, deposit_bank,brand_status,province_id,
+      province,city_id,city,industry_id, industry_name,create_time, update_time)
+    VALUES ( 
+    	#{brandId,jdbcType=VARCHAR}, 
+    	#{brandName,jdbcType=VARCHAR}, 
+    	#{brandTypeId,jdbcType=VARCHAR}, 
+    	#{brandType,jdbcType=VARCHAR}, 
+    	#{companyName,jdbcType=VARCHAR}, 
+    	#{bankId,jdbcType=VARCHAR}, 
+        #{bankName,jdbcType=VARCHAR}, 
+        #{bankAccount,jdbcType=VARCHAR}, 
+        #{depositBank,jdbcType=VARCHAR}, 
+        #{brandStatus,jdbcType=VARCHAR},
+        #{provinceId,jdbcType=BIGINT},
+        #{province,jdbcType=VARCHAR},
+        #{cityId,jdbcType=BIGINT},
+        #{city,jdbcType=VARCHAR},
+        #{industryId,jdbcType=VARCHAR},
+        #{industryName,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
+        )
+	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT @@IDENTITY
+	</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hanyun.platform.member.api.domain.BrandInfo">
+		INSERT INTO brand_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">
+                brand_id,
+            </if>
+            <if test="brandName != null">
+                brand_name,
+            </if>
+            <if test="brandTypeId != null">
+                brand_type_id,
+            </if>
+            <if test="brandType != null">
+                brand_type,
+            </if>
+            <if test="companyName != null">
+                company_name,
+            </if>
+            <if test="bankId != null">
+                bank_id,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankAccount != null">
+                bank_account,
+            </if>
+            <if test="depositBank != null">
+                deposit_bank,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">
+                #{brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="brandName != null">
+                #{brandName,jdbcType=VARCHAR},
+            </if>
+            <if test="brandTypeId != null">
+                #{brandTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="brandType != null">
+                #{brandType,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName != null">
+                #{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankId != null">
+                #{bankId,jdbcType=VARCHAR},
+            </if>
+            <if test="bankName != null">
+                #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankAccount != null">
+                #{bankAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="depositBank != null">
+                #{depositBank,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT @@IDENTITY
+		</selectKey>
+	</insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.hanyun.platform.member.api.domain.BrandInfo" >
+     UPDATE brand_info
+        <set>
+            <if test="brandId != null">
+                brand_id = #{brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="brandName != null">
+                brand_name = #{brandName,jdbcType=VARCHAR},
+            </if>
+            <if test="brandTypeId != null">
+                brand_type_id = #{brandTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="brandType != null">
+                brand_type = #{brandType,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName != null">
+                company_name = #{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankId != null">
+                bank_id = #{bankId,jdbcType=VARCHAR},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankAccount != null">
+                bank_account = #{bankAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="depositBank != null">
+                deposit_bank = #{depositBank,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hanyun.platform.member.api.dao.BrandMemberDao">
+	<resultMap id="BaseResultMap" type="com.hanyun.platform.member.api.domain.BrandMember">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="brand_id" property="brandId" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="member_id" property="memberId" jdbcType="VARCHAR" />
+		<result column="type_id" property="typeId" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="expiry" property="expiry" jdbcType="VARCHAR" />
+		<result column="total_price" property="totalPrice" jdbcType="INTEGER" />
+		<result column="service_count" property="serviceCount" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="last_service_time" property="lastServiceTime" jdbcType="TIMESTAMP" />
+		<result column="service_avg_day" property="serviceAvgDay" jdbcType="VARCHAR" />
+		<result column="source_store_id" property="sourceStoreId" jdbcType="VARCHAR" />
+		<result column="source_store_name" property="sourceStoreName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, brand_id, user_id, member_id, type_id, level, expiry, total_price, service_count,
+		status, last_service_time, service_avg_day, source_store_id, source_store_name, create_time, update_time
+	</sql>
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from brand_member
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from brand_member
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectMemberOfBrandByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from brand_member
+		where brand_id = #{brandId,jdbcType=VARCHAR}
+		<if test="source != null">
+			and source_store_id = #{source,jdbcType=VARCHAR}
+		</if>
+		limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+	</select>
+	<select id="selectMember" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from brand_member
+		where brand_id = #{brandId,jdbcType=VARCHAR} and user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectCount" resultType="java.lang.Long" parameterType="java.lang.String">
+		select count(id) from brand_member
+		where brand_id = #{brandId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectSourceCount" resultType="java.lang.Long">
+		select count(id) from brand_member
+		where brand_id = #{brandId,jdbcType=VARCHAR}
+		<if test="source != null">
+			and source_store_id = #{source,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_rebate_plan
+		where id = #{id,jdbcType=INTEGER}
+	</delete>-->
+	<insert id="insert" parameterType="com.hanyun.platform.member.api.domain.BrandMember" useGeneratedKeys="true" keyProperty="id">
+		insert into brand_member (
+			brand_id, user_id, member_id, type_id, level, status, expiry, total_price, service_count,
+		last_service_time, service_avg_day, source_store_id, source_store_name, create_time, update_time
+		)
+		values (#{brandId,jdbcType=VARCHAR},
+		#{userId,jdbcType=VARCHAR},
+		#{memberId,jdbcType=VARCHAR},
+		#{typeId,jdbcType=VARCHAR},
+		#{level,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},
+		#{expiry,jdbcType=VARCHAR},
+		#{totalPrice,jdbcType=INTEGER},
+		#{serviceCount,jdbcType=INTEGER},
+		#{lastServiceTime,jdbcType=DATE},
+		#{serviceAvgDay,jdbcType=VARCHAR},
+		#{sourceStoreId,jdbcType=VARCHAR},
+		#{sourceStoreName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}
+		)
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT @@IDENTITY
+		</selectKey>
+	</insert>
+	<insert id="insertSelective" parameterType="com.hanyun.platform.member.api.domain.BrandMember">
+		insert into brand_member
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="brandId != null">
+				brand_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="expiry != null">
+				expiry,
+			</if>
+			<if test="totalPrice != null">
+				total_price,
+			</if>
+			<if test="serviceCount != null">
+				service_count,
+			</if>
+			<if test="lastServiceTime != null">
+				last_service_time,
+			</if>
+			<if test="serviceAvgDay != null">
+				service_avg_day,
+			</if>
+			<if test="sourceStoreId != null">
+				source_store_id,
+			</if>
+			<if test="sourceStoreName != null">
+				source_store_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="brandId != null">
+				#{brandId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="memberId != null">
+				#{memberId,jdbcType=VARCHAR},
+			</if>
+			<if test="typeId != null">
+				#{typeId,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="expiry != null">
+				#{expiry,jdbcType=TINYINT},
+			</if>
+			<if test="totalPrice != null">
+				#{totalPrice,jdbcType=INTEGER},
+			</if>
+			<if test="serviceCount != null">
+				#{serviceCount,jdbcType=INTEGER},
+			</if>
+			<if test="lastServiceTime != null">
+				#{lastServiceTime,jdbcType=DATE},
+			</if>
+			<if test="serviceAvgDay != null">
+				#{serviceAvgDay,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceStoreId != null">
+				#{sourceStoreId,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceStoreName != null">
+				#{sourceStoreName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT @@IDENTITY
+		</selectKey>
+	</insert>
+	<update id="updateByIdSelective" parameterType="com.hanyun.platform.member.api.domain.BrandMember">
+		update brand_member
+		<set>
+			<if test="brandId != null">
+				brand_id = #{brandId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=VARCHAR},
+			</if>
+			<if test="typeId != null">
+				type_id = #{typeId,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="expiry != null">
+				expiry = #{expiry,jdbcType=VARCHAR},
+			</if>
+			<if test="totalPrice != null">
+				total_price = #{totalPrice,jdbcType=INTEGER},
+			</if>
+			<if test="serviceCount != null">
+				service_count = #{serviceCount,jdbcType=INTEGER},
+			</if>
+			<if test="lastServiceTime != null">
+				last_service_time = #{lastServiceTime,jdbcType=DATE},
+			</if>
+			<if test="serviceAvgDay != null">
+				service_avg_day = #{serviceAvgDay,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceStoreId != null">
+				source_store_id = #{sourceStoreId,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceStoreName != null">
+				source_store_name = #{sourceStoreName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByUserIdSelective" parameterType="com.hanyun.platform.member.api.domain.BrandMember">
+		update brand_member
+		<set>
+			<if test="brandId != null">
+				brand_id = #{brandId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=VARCHAR},
+			</if>
+			<if test="typeId != null">
+				type_id = #{typeId,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="expiry != null">
+				expiry = #{expiry,jdbcType=VARCHAR},
+			</if>
+			<if test="totalPrice != null">
+				total_price = #{totalPrice,jdbcType=INTEGER},
+			</if>
+			<if test="serviceCount != null">
+				service_count = #{serviceCount,jdbcType=INTEGER},
+			</if>
+			<if test="lastServiceTime != null">
+				last_service_time = #{lastServiceTime,jdbcType=DATE},
+			</if>
+			<if test="serviceAvgDay != null">
+				service_avg_day = #{serviceAvgDay,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceStoreId != null">
+				source_store_id = #{sourceStoreId,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceStoreName != null">
+				source_store_name = #{sourceStoreName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateStatusById" parameterType="com.hanyun.platform.member.api.domain.BrandMember">
+		update brand_member
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<!-- <update id="updateByPrimaryKey" parameterType="cn.com.gome.rebate.model.persist.plan.RebatePlanPo">
+		update t_rebate_plan
+		set descrition = #{descrition,jdbcType=VARCHAR},
+		plan_type = #{planType,jdbcType=TINYINT},
+		name = #{name,jdbcType=VARCHAR},
+		merchant_scopes = #{merchantScopes,jdbcType=VARCHAR},
+		flow = #{flow,jdbcType=TINYINT},
+		valid_start_time = #{validStartTime,jdbcType=TIMESTAMP},
+		valid_end_time = #{validEndTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=TINYINT},
+		inactive_time = #{inactiveTime,jdbcType=TIMESTAMP},
+		active_time = #{activeTime,jdbcType=TIMESTAMP},
+		approval_time = #{approvalTime,jdbcType=TIMESTAMP},
+		calc_node =
+		#{calcNode,jdbcType=INTEGER},
+		thaw_node = #{thawNode,jdbcType=INTEGER},
+		rebate_context = #{rebateContext,jdbcType=INTEGER},
+		exclusive_id = #{exclusiveId,jdbcType=VARCHAR},
+		ratios =
+		#{ratios,jdbcType=VARCHAR},
+		pull_levels = #{pullLevels,jdbcType=VARCHAR},
+		rebate_level = #{rebateLevel,jdbcType=TINYINT},
+		rebate_ratio = #{rebateRatio,jdbcType=TINYINT},
+		role_ratio =
+		#{roleRatio,jdbcType=VARCHAR},
+		order_type = #{orderType,jdbcType=VARCHAR},
+		sub_valid_day = #{subValidDay,jdbcType=TINYINT},
+		estimate_amount = #{estimateAmount,jdbcType=BIGINT},
+		estimate_no =
+		#{estimateNo,jdbcType=VARCHAR},
+		gome_id = #{userId,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update> -->
+
+	<!--此处是自定义方法分割线 -->
+	
+</mapper>

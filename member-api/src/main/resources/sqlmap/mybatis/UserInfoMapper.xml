@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hanyun.platform.member.api.dao.UserInfoDao">
+	<resultMap id="BaseResultMap" type="com.hanyun.platform.member.api.domain.UserInfo">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="wx_id" property="wxId" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="password" property="passWord" jdbcType="VARCHAR" />
+		<result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+		<result column="card_type" property="cardType" jdbcType="TINYINT" />
+		<result column="gender" property="gender" jdbcType="TINYINT" />
+		<result column="country_id" property="countryId" jdbcType="BIGINT" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province_id" property="provinceId" jdbcType="BIGINT" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city_id" property="cityId" jdbcType="BIGINT" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,user_id,wx_id,phone,password,name,gender,card_no,card_type,
+  		country_id,country,province_id,province,city_id,city,create_time,update_time
+	</sql>
+	<select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from user_info
+		where phone = #{phone,jdbcType=VARCHAR}
+	</select>
+	<select id="selectUsers" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_info
+	</select>
+	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from user_info
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_info
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectByIdAndNameAndPhone" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_info
+		where 1=1
+		<if test="id != null">
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="name != null">
+			and name like CONCAT(CONCAT('%', #{name}), '%')
+		</if>
+		<if test="phone != null">
+			and phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null">
+			and create_time &gt; #{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null">
+			and create_time &lt; #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+	</select>
+	<select id="selectCount" resultType="java.lang.Long" parameterType="java.lang.String">
+		select count(id) from user_info
+		where 1=1
+		<if test="id != null">
+			and id = #{id,jdbcType=BIGINT}
+		</if>
+		<if test="name != null">
+			and name like CONCAT(CONCAT('%', #{name}), '%')
+		</if>
+		<if test="phone != null">
+			and phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null">
+			and create_time &gt; #{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null">
+			and create_time &lt; #{endTime,jdbcType=TIMESTAMP}
+		</if>
+	</select>
+	<!-- <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_rebate_plan
+		where id = #{id,jdbcType=INTEGER}
+	</delete>-->
+	<insert id="insert" parameterType="com.hanyun.platform.member.api.domain.UserInfo" useGeneratedKeys="true" keyProperty="id">
+		insert into user_info (user_id,wx_id,phone,password,name,gender,card_no,card_type,
+		country_id,country,province_id,province,city_id,city,create_time,update_time
+		)
+		values (#{userId,jdbcType=VARCHAR},
+		#{wxId,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR},
+		#{passWord,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{gender,jdbcType=TINYINT},
+		#{cardNo,jdbcType=VARCHAR},
+		#{cardType,jdbcType=TINYINT},
+		#{countryId,jdbcType=BIGINT},
+		#{country,jdbcType=VARCHAR},
+		#{provinceId,jdbcType=BIGINT},
+		#{province,jdbcType=VARCHAR},
+		#{cityId,jdbcType=BIGINT},
+		#{city,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}
+		)
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT @@IDENTITY
+		</selectKey>
+	</insert>
+	<insert id="insertSelective" parameterType="com.hanyun.platform.member.api.domain.UserInfo">
+		insert into user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="wxId != null">
+				wx_id,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="passWord != null">
+				password,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="countryId != null">
+				country_id,
+			</if><if test="country != null">
+				country,
+			</if>
+			<if test="provinceId != null">
+				province_id,
+			</if><if test="province != null">
+				province,
+			</if>
+			<if test="cityId != null">
+				city_id,
+			</if><if test="city != null">
+				city,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="wxId != null">
+				#{wxId,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="passWord != null">
+				#{passWord,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				#{gender,jdbcType=TINYINT},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=TINYINT},
+			</if>
+			<if test="countryId != null">
+				#{country_id,jdbcType=BIGINT},
+			</if><if test="country != null">
+				#{country,jdbcType=VARCHAR},
+			</if>
+			<if test="provinceiD != null">
+				#{province_id,jdbcType=BIGINT},
+			</if><if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="cityId != null">
+				#{city_id,jdbcType=BIGINT},
+			</if><if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT @@IDENTITY
+		</selectKey>
+	</insert>
+	<update id="updateByIdSelective" parameterType="com.hanyun.platform.member.api.domain.UserInfo">
+		update user_info
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="wxId != null">
+				wx_id = #{wxId,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="passWord != null">
+				password = #{passWord,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender,jdbcType=TINYINT},
+			</if>
+			<if test="cardNo != null">
+				card_no = #{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=TINYINT},
+			</if>
+			<if test="countryId != null">
+				country_id = #{countryId,jdbcType=BIGINT},
+			</if><if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="provinceId != null">
+				province_id = #{provinceId,jdbcType=BIGINT},
+			</if><if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="cityId != null">
+				city_id = #{cityId,jdbcType=BIGINT},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	<!-- <update id="updateByPrimaryKey" parameterType="cn.com.gome.rebate.model.persist.plan.RebatePlanPo">
+		update t_rebate_plan
+		set descrition = #{descrition,jdbcType=VARCHAR},
+		plan_type = #{planType,jdbcType=TINYINT},
+		name = #{name,jdbcType=VARCHAR},
+		merchant_scopes = #{merchantScopes,jdbcType=VARCHAR},
+		flow = #{flow,jdbcType=TINYINT},
+		valid_start_time = #{validStartTime,jdbcType=TIMESTAMP},
+		valid_end_time = #{validEndTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=TINYINT},
+		inactive_time = #{inactiveTime,jdbcType=TIMESTAMP},
+		active_time = #{activeTime,jdbcType=TIMESTAMP},
+		approval_time = #{approvalTime,jdbcType=TIMESTAMP},
+		calc_node =
+		#{calcNode,jdbcType=INTEGER},
+		thaw_node = #{thawNode,jdbcType=INTEGER},
+		rebate_context = #{rebateContext,jdbcType=INTEGER},
+		exclusive_id = #{exclusiveId,jdbcType=VARCHAR},
+		ratios =
+		#{ratios,jdbcType=VARCHAR},
+		pull_levels = #{pullLevels,jdbcType=VARCHAR},
+		rebate_level = #{rebateLevel,jdbcType=TINYINT},
+		rebate_ratio = #{rebateRatio,jdbcType=TINYINT},
+		role_ratio =
+		#{roleRatio,jdbcType=VARCHAR},
+		order_type = #{orderType,jdbcType=VARCHAR},
+		sub_valid_day = #{subValidDay,jdbcType=TINYINT},
+		estimate_amount = #{estimateAmount,jdbcType=BIGINT},
+		estimate_no =
+		#{estimateNo,jdbcType=VARCHAR},
+		gome_id = #{userId,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update> -->
+
+	<!--此处是自定义方法分割线 -->
+	
+</mapper>
